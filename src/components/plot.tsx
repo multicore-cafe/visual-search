@@ -35,6 +35,13 @@ function mkSchema(pointData: PointData[], clusterData: ClusterData[]) {
       {
         data: { name: "point-data" },
         mark: { type: "circle" },
+        params: [
+          {
+            name: "zoom",
+            select: { type: "interval", encodings: ["x", "y"] },
+            bind: "scales",
+          },
+        ],
         encoding: {
           x: {
             field: "x",
