@@ -3,7 +3,7 @@ import { spawn, Thread, Worker } from "threads";
 import winkNLP from "wink-nlp";
 import model from "wink-eng-lite-web-model";
 
-import { mean } from "mathjs";
+import { mean, isArray, isMatrix } from "mathjs";
 import { UMAP } from "umap-js";
 import { agnes } from "ml-hclust";
 
@@ -75,7 +75,14 @@ function embedArticle(tokens: string[], w2v: Record<string, number[]>): number[]
     return Object.values(w2v)[0].map(_ => 0);
   }
 
-  return mean(vecs, 0);
+  const meanResult = mean(vecs, 0);
+  // Handle the new MathScalarType return type from mathjs v14.5.2
+  if (isArray(meanResult) || isMatrix(meanResult)) {
+    return Array.from(meanResult as any) as number[];
+  } else {
+    // If it's a single value, create an array with that value
+    return Object.values(w2v)[0].map(_ => Number(meanResult));
+  }
 }
 
 function getArticlesSource(source: string) {
@@ -277,8 +284,8 @@ export function preparePlotData(articles: Article[], embedding: number[][], keyw
 export function prepareClusterData(clusts: number[], keywords: string[], plotData: PointData[]): ClusterData[] {
   return getIdsPerCluster(clusts).map((ids, ci) => {
     return {
-      x: mean(ids.map(i => plotData[i].x)),
-      y: mean(ids.map(i => plotData[i].y)),
+      x: Number(mean(ids.map(i => plotData[i].x))),
+      y: Number(mean(ids.map(i => plotData[i].y))),
       cluster: keywords[ci],
     };
   });

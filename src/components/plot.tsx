@@ -118,7 +118,11 @@ function InnerPlot({ points, clusters }: InnerProps) {
 
   useEffect(() => {
     if (element.current === null) return;
-    embed(element.current, schema).then(result => {
+    embed(element.current, schema, {
+      // Additional configuration for the zoom behavior
+      actions: true, // Show the action menu (with download, view source, etc.)
+      renderer: "svg", // Use SVG renderer for better quality when zooming
+    }).then(result => {
       result.view.addEventListener("click", function (_, item) {
         if (item === null || item === undefined || item.datum === undefined) return;
         if (!("title" in item.datum)) return;

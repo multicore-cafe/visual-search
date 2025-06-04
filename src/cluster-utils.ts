@@ -1,6 +1,6 @@
 import { calculateTfIdf } from "ts-tfidf";
 import { Cluster } from "ml-hclust";
-import { mean } from "mathjs";
+import { mean, isMatrix, isArray } from "mathjs";
 
 export type ClusterLike = {
   height: number;
@@ -24,11 +24,20 @@ export function extractKeywordsTfIdf(
   // average tfidf for each cluster
   const words = Array.from(corpus[0].keys());
   const clusterTfidf = clusterIds.map(
-    (ids) =>
-      mean(
+    (ids) => {
+      const meanResult = mean(
         ids.map((i) => Array.from(corpus[i].values())),
         0
-      ) as number[]
+      );
+      
+      // Handle the new MathScalarType return type from mathjs v14.5.2
+      if (isArray(meanResult) || isMatrix(meanResult)) {
+        return Array.from(meanResult as any) as number[];
+      } else {
+        // If it's a single value, we need to handle that case too
+        return [Number(meanResult)];
+      }
+    }
   );
 
   // get the top nKeywords keywords for each cluster
