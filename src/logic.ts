@@ -15,8 +15,7 @@ import * as pubMed from "./article-sources/pub-med";
 
 import type { KeywordWorker } from "./keyword-worker";
 
-import { type BaseLLM } from "langchain/llms/base";
-import { OpenAI } from "langchain/llms/openai";
+import OpenAI from "openai";
 import { Progress } from "./progress";
 import { SearchRequest } from "./components/search-bar";
 
@@ -153,7 +152,7 @@ function stripPrefix(str: string, prefix: string): string {
 }
 
 async function generateClusterName(
-  model: BaseLLM,
+  model: OpenAI,
   keywords: string[],
   titles: string[]
 ): Promise<{
@@ -175,9 +174,15 @@ First line should be just a title as plain text, second line should be a descrip
 Do not use common words like "group", "article", "about" for title.
 Do not wrap title with quotes. Do not use pattern "A: B".`;
 
-  const result = await model.call(prompt);
-  const [title, description] = result.trim().split("\n");
-  console.log(result);
+  const response = await model.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.1,
+  });
+
+  const resultText = response.choices[0].message.content || "";
+  const [title, description] = resultText.trim().split("\n");
+  console.log(resultText);
   return {
     title: stripPrefix(title, "Title:").trim(),
     description: stripPrefix(description, "Description:").trim(),
@@ -234,8 +239,8 @@ export async function prettifyClusters(
   });
 
   const model = new OpenAI({
-    openAIApiKey: openAIToken,
-    temperature: 0.9,
+    apiKey: openAIToken,
+    dangerouslyAllowBrowser: true,
   });
 
   const prettified = await traverseP(byClasters, async cluster => {
