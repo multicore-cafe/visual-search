@@ -44,7 +44,7 @@ export function App() {
       setState({ tag: "searching" });
       setState({ tag: "ready_for_clustering", search: await doSearchRequest(request, progress), clustsParams });
     },
-    [clustsParams]
+    [clustsParams, progress]
   );
 
   useEffectAsync(async () => {
@@ -67,21 +67,18 @@ export function App() {
     });
   }, [state, clustsParams]);
 
-  const handleClusterize = useCallback(
-    (clustsParams: ClusterizeRequest) => {
-      setClustsParams(clustsParams);
-      setState(state =>
-        match<State>(state, {
-          not_searched: self => self,
-          searching: self => self,
-          ready_for_clustering: self => ({ ...self, clustsParams }),
-          clustering: self => ({ ...self, tag: "ready_for_clustering", clustsParams }),
-          clustered: self => ({ ...self, tag: "ready_for_clustering", clustsParams }),
-        })
-      );
-    },
-    [clustsParams]
-  );
+  const handleClusterize = useCallback((clustsParams: ClusterizeRequest) => {
+    setClustsParams(clustsParams);
+    setState(state =>
+      match<State>(state, {
+        not_searched: self => self,
+        searching: self => self,
+        ready_for_clustering: self => ({ ...self, clustsParams }),
+        clustering: self => ({ ...self, tag: "ready_for_clustering", clustsParams }),
+        clustered: self => ({ ...self, tag: "ready_for_clustering", clustsParams }),
+      })
+    );
+  }, []);
 
   return (
     <AppContainer $dirty={isDirty}>
@@ -103,15 +100,10 @@ export function App() {
           clustering() {
             return <ProgressView progress={progress} />;
           },
-          clustered({ clusts, search, clustsParams }) {
+          clustered({ clusts, search }) {
             return (
               <>
-                <Plot
-                  clusts={clusts.clusts}
-                  keywords={clusts.keywords}
-                  searchResponse={search}
-                  clustersRequest={clustsParams}
-                />
+                <Plot clusts={clusts.clusts} keywords={clusts.keywords} searchResponse={search} />
                 {clusts.prettified && (
                   <div style={{ marginTop: "20px" }}>
                     <Clusters clusters={clusts.prettified} />

@@ -147,7 +147,7 @@ export function ClusteringParams({ onChange }: { onChange(params: ClusterizeRequ
 
   useEffect(() => {
     if (clusterizeRequest) onChange_(clusterizeRequest);
-  }, [clusterizeRequest]);
+  }, [clusterizeRequest, onChange_]);
 
   return (
     <SearchParams>

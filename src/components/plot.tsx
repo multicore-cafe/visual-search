@@ -1,7 +1,6 @@
 import { useMemo, useEffect, useRef, useState } from "react";
 import embed from "vega-embed";
 import { SearchResponse, prepareClusterData, preparePlotData } from "../logic";
-import { ClusterizeRequest } from "./search-bar";
 import { type Article } from "../article-sources";
 import styled from "styled-components";
 
@@ -94,10 +93,9 @@ type Props = {
   clusts: number[];
   keywords: string[];
   searchResponse: SearchResponse;
-  clustersRequest: ClusterizeRequest;
 };
 
-export function Plot({ clusts, keywords, searchResponse, clustersRequest }: Props) {
+export function Plot({ clusts, keywords, searchResponse }: Props) {
   const { points, clusters } = useMemo(() => {
     const points = preparePlotData(
       searchResponse.articles,
@@ -108,7 +106,7 @@ export function Plot({ clusts, keywords, searchResponse, clustersRequest }: Prop
     const clusters = prepareClusterData(clusts, keywords, points);
 
     return { points, clusters };
-  }, [searchResponse, clustersRequest, clusts, keywords]);
+  }, [searchResponse, clusts, keywords]);
 
   return <InnerPlot points={points} clusters={clusters} />;
 }
