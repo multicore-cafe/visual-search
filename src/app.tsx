@@ -84,8 +84,8 @@ export function App() {
   );
 
   return (
-    <AppContainer dirty={isDirty}>
-      <AppHeader dirty={isDirty}>Visual Search</AppHeader>
+    <AppContainer $dirty={isDirty}>
+      <AppHeader $dirty={isDirty}>Visual Search</AppHeader>
       <SearchBar disabled={isSearching} onSearch={handleSearch} />
       <ClusteringParams onChange={handleClusterize} />
 
@@ -126,17 +126,17 @@ export function App() {
   );
 }
 
-const AppContainer = styled.div<{ dirty: boolean }>`
+const AppContainer = styled.div<{ $dirty: boolean }>`
   padding: 0 20px 0;
   max-width: 1280px;
   margin: 0 auto;
 
-  padding-top: ${props => (props.dirty ? "0" : "200px")};
+  padding-top: ${props => (props.$dirty ? "0" : "200px")};
   transition: padding-top 300ms ease-out;
 `;
 
-const AppHeader = styled.h1<{ dirty: boolean }>`
-  font-size: ${props => (props.dirty ? "2em" : "4em")};
+const AppHeader = styled.h1<{ $dirty: boolean }>`
+  font-size: ${props => (props.$dirty ? "2em" : "4em")};
   transition: font-size 300ms ease-out;
 `;
 

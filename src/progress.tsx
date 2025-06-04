@@ -72,7 +72,7 @@ export function ProgressView({ progress }: { progress: Progress }) {
   return (
     <ProgressStepList>
       {progress.steps.map(step => (
-        <ProgressStepItem key={step.id} complete={step.isComplete}>
+        <ProgressStepItem key={step.id} $complete={step.isComplete}>
           <ProgressStepItemCheck checked={step.isComplete} readOnly />
           {step.message}
         </ProgressStepItem>
@@ -90,9 +90,9 @@ const ProgressStepItemCheck = styled.input.attrs({ type: "checkbox" })`
   margin-right: 4px;
 `;
 
-const ProgressStepItem = styled.label<{ complete: boolean }>`
+const ProgressStepItem = styled.label<{ $complete: boolean }>`
   display: flex;
   align-items: center;
 
-  color: ${props => (props.complete ? "#171" : "#222")};
+  color: ${props => (props.$complete ? "#171" : "#222")};
 `;

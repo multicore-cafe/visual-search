@@ -101,7 +101,7 @@ export function Plot({ clusts, keywords, searchResponse, clustersRequest }: Prop
     const clusters = prepareClusterData(clusts, keywords, points);
 
     return { points, clusters };
-  }, [searchResponse, clustersRequest]);
+  }, [searchResponse, clustersRequest, clusts, keywords]);
 
   return <InnerPlot points={points} clusters={clusters} />;
 }
@@ -137,7 +137,7 @@ function InnerPlot({ points, clusters }: InnerProps) {
       {selectedItem && (
         <PlotPreview>
           <h2 className="title">
-            <a href={selectedItem.url} target="_blank">
+            <a href={selectedItem.url} target="_blank" rel="noreferrer">
               {selectedItem.title}
             </a>
           </h2>
