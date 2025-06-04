@@ -113,8 +113,8 @@ export function SearchBar({ disabled, onSearch }: Props) {
               id="articles-source"
               onChange={event => setArticlesSource(event.currentTarget.value)}
             >
-              <option value="semantic-scholar">Semantic Scholar</option>
               <option value="pub-med">PubMed</option>
+              <option value="semantic-scholar">Semantic Scholar</option>
             </select>
           </div>
         </SearchParam>
