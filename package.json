@@ -1,6 +1,6 @@
 {
   "name": "visual-search",
-  "homepage": "https://kana-sama.github.io/visual-search",
+  "homepage": "https://multicore-cafe.github.io/visual-search",
   "dependencies": {
     "bulma": "^1.0.4",
     "lodash.debounce": "^4.0.8",
